@@ -22,3 +22,5 @@ Thumbs.db
 
 # Kaggle API key
 kaggle.json
+
+.env
