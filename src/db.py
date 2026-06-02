@@ -121,10 +121,17 @@ def load_missions_full() -> pd.DataFrame:
             d.quarter        AS launch_quarter,
             d.month          AS launch_month,
             d.decade         AS launch_decade
+
+            d2.full_date      AS end_date,
+            d2.year           AS end_year,
+            d2.quarter        AS end_quarter,
+            d2.month          AS end_month,
+            d2.decade         AS end_decade
         FROM fact_missions  f
         LEFT JOIN dim_agency  a ON f.agency_id       = a.agency_id
         LEFT JOIN dim_launch  l ON f.launch_id        = l.launch_id
         LEFT JOIN dim_date    d ON f.launch_date_id   = d.date_id
+        left join dim_date d2 on f.end_date_id = d2.date_id
         ORDER BY d.full_date
     """
     df = query(sql)
@@ -161,6 +168,10 @@ def load_missions_with_meta() -> pd.DataFrame:
             d.year           AS launch_year,
             d.decade         AS launch_decade,
 
+            d2.full_date      AS end_date,
+            d2.year           AS end_year,
+            d2.decade         AS end_decade,
+
             m.objective,
             m.key_achievement,
             m.mission_outcome_detail,
@@ -170,6 +181,7 @@ def load_missions_with_meta() -> pd.DataFrame:
         LEFT JOIN dim_launch       l ON f.launch_id        = l.launch_id
         LEFT JOIN dim_date         d ON f.launch_date_id   = d.date_id
         LEFT JOIN dim_mission_meta m ON f.mission_id       = m.mission_id
+        left join dim_date d2 on f.end_date_id = d2.date_id
         ORDER BY d.full_date
     """
     df = query(sql)

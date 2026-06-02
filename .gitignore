@@ -24,3 +24,6 @@ Thumbs.db
 kaggle.json
 
 .env
+
+notebooks/logs/*
+!notebooks/logs/.gitkeep
