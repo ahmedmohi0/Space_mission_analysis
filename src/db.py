@@ -120,7 +120,7 @@ def load_missions_full() -> pd.DataFrame:
             d.year           AS launch_year,
             d.quarter        AS launch_quarter,
             d.month          AS launch_month,
-            d.decade         AS launch_decade
+            d.decade         AS launch_decade,
 
             d2.full_date      AS end_date,
             d2.year           AS end_year,
