@@ -516,3 +516,63 @@ DROP TABLE dim_date]
 2026-05-29 18:28:26  INFO      space_missions.__main__  etl_load.py:464    bridge_crew             11,789 rows
 2026-05-29 18:28:26  INFO      space_missions.__main__  etl_load.py:464    bridge_partners          4,336 rows
 2026-05-29 18:28:26  INFO      space_missions.__main__  etl_load.py:465  ============================================================
+2026-06-05 08:30:35  INFO      space_missions  logger.py:80  Logging initialised — file: F:\projects\space_mission_analysis\logs\space_missions.log
+2026-06-05 08:31:07  INFO      space_missions  logger.py:80  Logging initialised — file: F:\projects\space_mission_analysis\logs\space_missions.log
+2026-06-05 08:31:07  INFO      space_missions.__main__  etl_load.py:432  ============================================================
+2026-06-05 08:31:07  INFO      space_missions.__main__  etl_load.py:433  SPACE MISSIONS ETL — START
+2026-06-05 08:31:07  INFO      space_missions.__main__  etl_load.py:434  ============================================================
+2026-06-05 08:31:07  DEBUG     space_missions.db  db.py:30  No existing engine — creating a new one.
+2026-06-05 08:31:07  INFO      space_missions.db  db.py:50  Database engine initialised — localhost:5433/space_missions
+2026-06-05 08:31:07  DEBUG     space_missions.__main__  etl_load.py:51  Reading CSV from: F:\projects\space_mission_analysis\data\raw\space_missions.csv
+2026-06-05 08:31:07  INFO      space_missions.__main__  etl_load.py:57  Loaded raw CSV: 10,500 rows x 26 columns
+2026-06-05 08:31:07  INFO      space_missions.__main__  etl_load.py:121  Starting dataframe cleaning...
+2026-06-05 08:31:07  DEBUG     space_missions.__main__  etl_load.py:131  Column names normalised to snake_case
+2026-06-05 08:31:07  DEBUG     space_missions.__main__  etl_load.py:137  Sentinel values replaced with None across 25 string columns
+2026-06-05 08:31:07  INFO      space_missions.__main__  etl_load.py:148  Duration parsed: 5,561 valid, 4,939 could not be parsed (set NULL)
+2026-06-05 08:31:07  DEBUG     space_missions.__main__  etl_load.py:116  'status' — all values within allowed set
+2026-06-05 08:31:07  DEBUG     space_missions.__main__  etl_load.py:116  'mission_phase' — all values within allowed set
+2026-06-05 08:31:07  DEBUG     space_missions.__main__  etl_load.py:116  'crew_type' — all values within allowed set
+2026-06-05 08:31:07  DEBUG     space_missions.__main__  etl_load.py:116  'data_returned' — all values within allowed set
+2026-06-05 08:31:07  INFO      space_missions.__main__  etl_load.py:165  Cleaning complete.
+2026-06-05 08:31:07  DEBUG     space_missions.__main__  etl_load.py:177  Building dim_date...
+2026-06-05 08:31:07  INFO      space_missions.__main__  etl_load.py:196  dim_date built: 12,081 rows  (1957 — 2035)
+2026-06-05 08:31:07  DEBUG     space_missions.__main__  etl_load.py:202  Building dim_agency...
+2026-06-05 08:31:07  INFO      space_missions.__main__  etl_load.py:214  dim_agency built: 27 unique agencies
+2026-06-05 08:31:07  DEBUG     space_missions.__main__  etl_load.py:220  Building dim_launch...
+2026-06-05 08:31:07  INFO      space_missions.__main__  etl_load.py:230  dim_launch built: 139 unique vehicle/site combinations
+2026-06-05 08:31:07  DEBUG     space_missions.__main__  etl_load.py:245  Building fact_missions...
+2026-06-05 08:31:08  INFO      space_missions.__main__  etl_load.py:289  fact_missions built: 10,500 rows
+2026-06-05 08:31:08  DEBUG     space_missions.__main__  etl_load.py:314  Building bridge_crew...
+2026-06-05 08:31:08  INFO      space_missions.__main__  etl_load.py:317  bridge_crew built: 11,789 rows across 2,637 crewed missions
+2026-06-05 08:31:08  DEBUG     space_missions.__main__  etl_load.py:322  Building bridge_partners...
+2026-06-05 08:31:09  INFO      space_missions.__main__  etl_load.py:325  bridge_partners built: 4,336 rows across 4,336 collaborative missions
+2026-06-05 08:31:09  DEBUG     space_missions.__main__  etl_load.py:334  Building dim_mission_meta...
+2026-06-05 08:31:09  INFO      space_missions.__main__  etl_load.py:339  dim_mission_meta built: 10,500 rows
+2026-06-05 08:31:09  INFO      space_missions.__main__  etl_load.py:383  Starting database load...
+2026-06-05 08:31:09  INFO      space_missions.__main__  etl_load.py:365  All tables truncated.
+2026-06-05 08:31:09  INFO      space_missions.__main__  etl_load.py:387  Loading dim_date (12,081 rows)...
+2026-06-05 08:31:12  INFO      space_missions.__main__  etl_load.py:397    dim_date loaded successfully
+2026-06-05 08:31:12  INFO      space_missions.__main__  etl_load.py:387  Loading dim_agency (27 rows)...
+2026-06-05 08:31:12  INFO      space_missions.__main__  etl_load.py:397    dim_agency loaded successfully
+2026-06-05 08:31:12  INFO      space_missions.__main__  etl_load.py:387  Loading dim_launch (139 rows)...
+2026-06-05 08:31:12  INFO      space_missions.__main__  etl_load.py:397    dim_launch loaded successfully
+2026-06-05 08:31:12  INFO      space_missions.__main__  etl_load.py:387  Loading dim_mission_meta (10,500 rows)...
+2026-06-05 08:31:13  INFO      space_missions.__main__  etl_load.py:397    dim_mission_meta loaded successfully
+2026-06-05 08:31:13  INFO      space_missions.__main__  etl_load.py:387  Loading fact_missions (10,500 rows)...
+2026-06-05 08:31:17  INFO      space_missions.__main__  etl_load.py:397    fact_missions loaded successfully
+2026-06-05 08:31:17  INFO      space_missions.__main__  etl_load.py:387  Loading bridge_crew (11,789 rows)...
+2026-06-05 08:31:17  INFO      space_missions.__main__  etl_load.py:397    bridge_crew loaded successfully
+2026-06-05 08:31:17  INFO      space_missions.__main__  etl_load.py:387  Loading bridge_partners (4,336 rows)...
+2026-06-05 08:31:18  INFO      space_missions.__main__  etl_load.py:397    bridge_partners loaded successfully
+2026-06-05 08:31:18  DEBUG     space_missions.__main__  etl_load.py:407  Applying indexes...
+2026-06-05 08:31:18  INFO      space_missions.__main__  etl_load.py:424  Indexes applied.
+2026-06-05 08:31:18  INFO      space_missions.__main__  etl_load.py:461  ============================================================
+2026-06-05 08:31:18  INFO      space_missions.__main__  etl_load.py:462  ETL COMPLETE — row counts:
+2026-06-05 08:31:18  INFO      space_missions.__main__  etl_load.py:464    dim_date                12,081 rows
+2026-06-05 08:31:18  INFO      space_missions.__main__  etl_load.py:464    dim_agency                  27 rows
+2026-06-05 08:31:18  INFO      space_missions.__main__  etl_load.py:464    dim_launch                 139 rows
+2026-06-05 08:31:18  INFO      space_missions.__main__  etl_load.py:464    dim_mission_meta        10,500 rows
+2026-06-05 08:31:18  INFO      space_missions.__main__  etl_load.py:464    fact_missions           10,500 rows
+2026-06-05 08:31:18  INFO      space_missions.__main__  etl_load.py:464    bridge_crew             11,789 rows
+2026-06-05 08:31:18  INFO      space_missions.__main__  etl_load.py:464    bridge_partners          4,336 rows
+2026-06-05 08:31:18  INFO      space_missions.__main__  etl_load.py:465  ============================================================

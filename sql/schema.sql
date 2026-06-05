@@ -1,12 +1,3 @@
--- =============================================================================
--- SPACE MISSIONS DATABASE SCHEMA
--- =============================================================================
--- Pipeline : Raw CSV → Python (cleaning) → PostgreSQL → Python (analysis/ML)
---                                                     → Power BI
--- Author   : Space Missions DA Project
--- Notes    : Star schema optimized for both analytical queries and Power BI
---            relationships. Python handles all parsing/cleaning before load.
--- =============================================================================
 
 DROP TABLE IF EXISTS bridge_crew          CASCADE;
 DROP TABLE IF EXISTS bridge_partners      CASCADE;
@@ -25,14 +16,14 @@ CREATE TABLE dim_date (
     month_name    VARCHAR(10)   NOT NULL,
     week          SMALLINT      NOT NULL,
     day           SMALLINT      NOT NULL,
-    decade        VARCHAR(10)   NOT NULL   -- e.g. '1960s', '2020s'
+    decade        VARCHAR(10)   NOT NULL   
 );
 
 CREATE TABLE dim_agency (
     agency_id       SERIAL       PRIMARY KEY,
     agency_name     VARCHAR(255) NOT NULL,
     country_region  VARCHAR(255),
-    agency_type     VARCHAR(50)            -- Government | Private
+    agency_type     VARCHAR(50)            
 );
 
 CREATE TABLE dim_launch (
@@ -42,7 +33,7 @@ CREATE TABLE dim_launch (
 );
 
 CREATE TABLE dim_mission_meta (
-    mission_id            VARCHAR(20)  PRIMARY KEY,  -- e.g. NA-00001
+    mission_id            VARCHAR(20)  PRIMARY KEY,  
     mission_name          VARCHAR(500),
     objective             TEXT,
     key_achievement       TEXT,
@@ -64,7 +55,7 @@ CREATE TABLE fact_missions (
     mission_category    VARCHAR(100),   -- Moon, Mars, Earth Orbit…
     sub_category        VARCHAR(100),   -- Orbiter, Lander, Rover, CubeSat…
     destination         VARCHAR(255),
-    status              VARCHAR(50),    -- Success | Failed | Partial Success | Ongoing | Upcoming
+    status              VARCHAR(50),    -- Su,ccess | Failed | Partial Success | Ongoing | Upcoming
     mission_phase       VARCHAR(20),    -- Past | Ongoing | Future
     crew_type           VARCHAR(20),    -- Crewed | Uncrewed
     data_returned       VARCHAR(20),    -- Yes | No | Partial | N/A
@@ -89,9 +80,9 @@ CREATE TABLE bridge_partners (
     partner_agency  VARCHAR(255) NOT NULL
 );
 
--- =============================================================================
--- INDEXES  (query performance + Power BI relationship joins)
--- =============================================================================
+
+-- INDEXES  (
+
 
 CREATE INDEX idx_fact_agency        ON fact_missions(agency_id);
 CREATE INDEX idx_fact_launch        ON fact_missions(launch_id);
@@ -105,9 +96,8 @@ CREATE INDEX idx_bridge_crew_mid    ON bridge_crew(mission_id);
 CREATE INDEX idx_bridge_part_mid    ON bridge_partners(mission_id);
 
 
--- =============================================================================
--- ANALYTICAL VIEWS  (pre-aggregations for Power BI and Python queries)
--- =============================================================================
+
+-- ANALYTICAL VIEWS  
 
 -- Agency-level summary
 CREATE OR REPLACE VIEW vw_agency_summary AS
@@ -119,6 +109,9 @@ SELECT
     SUM(CASE WHEN f.status = 'Success'         THEN 1 ELSE 0 END) AS successful_missions,
     SUM(CASE WHEN f.status = 'Failed'          THEN 1 ELSE 0 END) AS failed_missions,
     SUM(CASE WHEN f.status = 'Partial Success' THEN 1 ELSE 0 END) AS partial_missions,
+    sum(CASE WHEN f.status = 'Ongoing'         THEN 1 ELSE 0 END) AS ongoing_missions,
+    sum(CASE WHEN f.status = 'Upcoming'        THEN 1 ELSE 0 END) AS upcoming_missions,
+    sum(CASE WHEN f.crew_type = 'Crewed'        THEN 1 ELSE 0 END) AS crewed_missions,
     ROUND(
         100.0 * SUM(CASE WHEN f.status = 'Success' THEN 1 ELSE 0 END)
         / NULLIF(COUNT(f.mission_id), 0), 2
@@ -160,8 +153,3 @@ SELECT
 FROM fact_missions f
 GROUP BY f.destination, f.mission_category
 ORDER BY total_missions DESC;
-
-
--- =============================================================================
--- END OF SCHEMA
--- =============================================================================,

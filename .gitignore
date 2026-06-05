@@ -27,3 +27,4 @@ kaggle.json
 
 notebooks/logs/*
 !notebooks/logs/.gitkeep
+logs/space_missions.log
