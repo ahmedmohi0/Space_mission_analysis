@@ -64,7 +64,7 @@ CREATE TABLE fact_missions (
     failure_reason      TEXT,
 
     -- Measures
-    cost_usd_million    DECIMAL(12, 2), -- NULL if unknown
+    cost_usd_billion    DECIMAL(12, 2), -- NULL if unknown
     duration_days       DECIMAL(10, 2)  -- Parsed from Duration string by Python; NULL if ongoing
 );
 
@@ -116,8 +116,8 @@ SELECT
         100.0 * SUM(CASE WHEN f.status = 'Success' THEN 1 ELSE 0 END)
         / NULLIF(COUNT(f.mission_id), 0), 2
     )                                                            AS success_rate_pct,
-    ROUND(AVG(f.cost_usd_million), 2)                           AS avg_cost_usd_million,
-    ROUND(SUM(f.cost_usd_million), 2)                           AS total_cost_usd_million
+    ROUND(AVG(f.cost_usd_billion), 2)                           AS avg_cost_usd_billion,
+    ROUND(SUM(f.cost_usd_billion), 2)                           AS total_cost_usd_billion
 FROM fact_missions  f
 JOIN dim_agency     a ON f.agency_id = a.agency_id
 GROUP BY a.agency_name, a.country_region, a.agency_type;
@@ -132,7 +132,7 @@ SELECT
     SUM(CASE WHEN f.status    = 'Success'   THEN 1 ELSE 0 END)  AS successes,
     SUM(CASE WHEN f.status    = 'Failed'    THEN 1 ELSE 0 END)  AS failures,
     SUM(CASE WHEN f.crew_type = 'Crewed'    THEN 1 ELSE 0 END)  AS crewed_missions,
-    ROUND(AVG(f.cost_usd_million), 2)                           AS avg_cost_usd_million
+    ROUND(AVG(f.cost_usd_billion), 2)                           AS avg_cost_usd_billion
 FROM fact_missions  f
 JOIN dim_date       d ON f.launch_date_id = d.date_id
 GROUP BY d.year, d.decade
@@ -149,7 +149,7 @@ SELECT
         100.0 * SUM(CASE WHEN f.status = 'Success' THEN 1 ELSE 0 END)
         / NULLIF(COUNT(f.mission_id), 0), 2
     )                                                            AS success_rate_pct,
-    ROUND(AVG(f.cost_usd_million), 2)                           AS avg_cost_usd_million
+    ROUND(AVG(f.cost_usd_billion), 2)                           AS avg_cost_usd_billion
 FROM fact_missions f
 GROUP BY f.destination, f.mission_category
 ORDER BY total_missions DESC;

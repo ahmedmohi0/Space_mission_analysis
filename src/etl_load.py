@@ -152,7 +152,9 @@ def clean_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     null_cost = df["cost_usd_million"].isna().sum()
     if null_cost:
         log.warning(f"{null_cost:,} rows have no cost data — will be NULL in fact table")
-
+    df["cost_usd_million"] = df["cost_usd_million"] / 1000
+    df = df.rename(columns={"cost_usd_million": "cost_usd_billion"})
+    log.info("Cost converted from million USD to billion USD")
   
 
     
@@ -272,7 +274,7 @@ def build_fact_missions(
         "mission_id", "agency_id", "launch_id", "launch_date_id", "end_date_id",
         "program_type", "mission_category", "sub_category", "destination",
         "status", "mission_phase", "crew_type", "data_returned",
-        "failure_reason", "cost_usd_million", "duration_days",
+        "failure_reason", "cost_usd_billion", "duration_days",
     ]]
 
     unresolved_agency = fact["agency_id"].isna().sum()

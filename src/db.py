@@ -106,7 +106,7 @@ def load_missions_full() -> pd.DataFrame:
             f.crew_type,
             f.data_returned,
             f.failure_reason,
-            f.cost_usd_million,
+            f.cost_usd_billion,
             f.duration_days,
 
             a.agency_name,
@@ -154,7 +154,7 @@ def load_missions_with_meta() -> pd.DataFrame:
             f.crew_type,
             f.data_returned,
             f.failure_reason,
-            f.cost_usd_million,
+            f.cost_usd_billion,
             f.duration_days,
 
             a.agency_name,
