@@ -61,7 +61,20 @@ def load_raw(path: str) -> pd.DataFrame:
 # =============================================================================
 #  CLEAN & STANDARDISE
 # =============================================================================
-
+agency_founding_year = {
+    "NASA": 1958,
+    "CNES": 1961,
+    "ISRO": 1969,
+    "ESA": 1975,
+    "ASI": 1988,
+    "CSA": 1989,
+    "Roscosmos": 1992,
+    "CNSA": 1993,
+    "DLR": 1997,
+    "Blue Origin": 2000,
+    "SpaceX": 2002,
+    "JAXA": 2003,
+}
 
 _NA_STRINGS = {"n/a", "na", "none", "unknown", "not applicable", "", "nan"}
 
@@ -140,8 +153,15 @@ def clean_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     df["launch_date"] = pd.to_datetime(df["launch_date"], errors="coerce")
     df["end_date"]    = pd.to_datetime(df["end_date"],    errors="coerce")
 
-  
-    
+    before = len(df)
+
+    df['agency_founding_year'] = pd.to_datetime(df['agency'].map(agency_founding_year), format='%Y')
+    df = df[df['launch_date'] >= df['agency_founding_year']]
+    after = len(df)
+    log.info("Launch dates validated against agency founding years")
+    log.info(f"{after:,} rows remain after validation")
+    log.info(f"{before - after:,} rows were deleted during validation")
+
     df["duration_days"] = df["duration"].apply(_parse_duration)
     parsed_ok   = df["duration_days"].notna().sum()
     parsed_fail = df["duration_days"].isna().sum()
