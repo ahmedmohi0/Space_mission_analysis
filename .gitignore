@@ -2,30 +2,22 @@
 __pycache__/
 *.pyc
 
-# Jupyter
-.ipynb_checkpoints/
 
 # Virtual environments
-venv/
-.env/
+.venv/
 
-# Data files
-data/raw/*
-!data/raw/.gitkeep
+
+# Environment variables
+.env
 
 # OS files
 .DS_Store
 Thumbs.db
 
-# Power BI
-*.pbix.autorecover
 
-# Kaggle API key
-kaggle.json
 
-.env
+# Logs
+logs
 
-notebooks/logs/*
-!notebooks/logs/.gitkeep
-logs/space_missions.log
+# VS Code
 .vscode/settings.json

@@ -22,7 +22,7 @@ import numpy as np
 from pathlib import Path
 from sqlalchemy import create_engine, text
 from dotenv import load_dotenv
-from src.config import RAW_DATA_DIR, PROCESSED_DATA_DIR
+from src.config import RAW_DATA_DIR
 from src.db import get_engine, query
 
 from src.logger import setup_logging, get_logger
