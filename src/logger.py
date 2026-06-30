@@ -1,5 +1,9 @@
 
-# THis file will serve as the central logging configuration for the project. The setup_logging() function configures a logger with both console and file handlers, while get_logger() provides a convenient way for other modules to obtain a logger instance that is a child of the main project logger. This design ensures consistent logging across the entire codebase while keeping third-party library logs separate and manageable.
+# THis file will serve as the central logging configuration for the project. 
+# The setup_logging() function configures a logger with both console and file handlers,
+# while get_logger() provides a convenient way for other modules to obtain a logger instance . 
+# This design ensures consistent logging across the entire codebase while keeping third-party library logs separate and manageable.
+
 import logging
 import logging.handlers
 from pathlib import Path
@@ -24,17 +28,8 @@ def setup_logging(
     file_level:    int = logging.DEBUG,
     silence_libs:  bool = True,
 ) -> logging.Logger:
-    """
-
-
-    Example
-    -------
-    # At the top of etl_load.py or a notebook's first cell:
-        from src.logger import setup_logging, get_logger
-        setup_logging()
-        log = get_logger(__name__)
-        log.info("ETL started")
-    """
+ 
+ 
     logger = logging.getLogger(_PROJECT)
 
     # Guard: if handlers already exist this function was already called
@@ -70,7 +65,7 @@ def setup_logging(
 
     # ── Silence noisy third-party loggers ────────────────────────────────────
     if silence_libs:
-        for lib in ("sqlalchemy", "psycopg2", "urllib3", "matplotlib", "PIL"):
+        for lib in ("sqlalchemy", "psycopg2", "urllib3", "matplotlib"):
             logging.getLogger(lib).setLevel(logging.WARNING)
 
     # ── Do NOT propagate to the root logger ──────────────────────────────────

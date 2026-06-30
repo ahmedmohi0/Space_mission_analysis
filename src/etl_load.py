@@ -87,9 +87,9 @@ def _to_null(val):
         return None
     return str(val).strip()
 
-# Convert human-readable duration strings to float days.
-def _parse_duration(val: str | None) -> float | None:
 
+def _parse_duration(val: str | None) -> float | None:
+    """ Convert human-readable duration strings to float days. """
     if val is None:
         return None
 
