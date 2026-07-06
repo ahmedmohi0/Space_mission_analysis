@@ -1,79 +1,78 @@
-# 🚀 Space Missions Analytics Pipeline (1957–2035)
+# 🚀 Space Missions Analytics Pipeline (1957–2022)
 
-A complete end-to-end data analytics project covering 65 years of space exploration — from data ingestion and cleaning through PostgreSQL warehousing, statistical analysis, and machine learning, to a Power BI report.
+An end-to-end data analytics project covering 65 years of space exploration history — from raw data ingestion and cleaning, through a PostgreSQL star-schema warehouse, to statistical analysis and a Power BI report.
+
+I built this to answer a real question, not just to showcase tools: **has spaceflight actually gotten more reliable and more commercial over time, or does it just look that way?** Every notebook exists to test a specific claim against the historical record — using Chi-square tests, Welch's t-tests, and rolling trend analysis rather than eyeballing charts. The pipeline itself reflects how I'd want to work on a real team: a validated PostgreSQL warehouse sits behind every notebook, so the analysis is reproducible and the data quality is checked before a single chart gets made.
 
 ---
 
 ## 📌 Project Status
 
-**Phase 1 — Infrastructure:** ✅ Complete
-**Phase 2 — Python Notebooks:** 🔄 In Progress (Notebook 01 complete)
-**Phase 3 — Power BI Report:**
-**Phase 4 — Portfolio Publish:**
+| Phase | Status |
+|---|---|
+| ETL & PostgreSQL Warehouse | ✅ Complete |
+| Data Quality Audit | ✅ Complete |
+| Exploratory Data Analysis | ✅ Complete |
+| Historical / Era Analysis | ✅ Complete |
+| Power BI Report | 🔄 In Progress |
 
 ---
 
 ## 📂 Dataset
 
-| Property | Detail                                                                                        |
-| -------- | --------------------------------------------------------------------------------------------- |
-| Source   | [Kaggle](https://www.kaggle.com/datasets/maulikgajera/global-space-missions-dataset-19502025) |
-| Coverage | 1957–2035 (78 years of space history)                                                         |
-| Rows     | ~10,500 missions                                                                              |
-| Columns  | 26                                                                                            |
-
----
+| Property | Detail |
+|---|---|
+| Source | [Kaggle](https://www.kaggle.com/datasets/maulikgajera/global-space-missions-dataset-19502025) |
+| Coverage | 1957–2035 |
+| Rows | ~7000 missions after cleaning and validation |
+| Columns | 26 |
 
 ### Dataset Columns
 
-| Column                   | Type    | Description                                                          |
-| ------------------------ | ------- | -------------------------------------------------------------------- |
-| `mission_id`             | String  | Unique mission identifier                                            |
-| `mission_name`           | String  | Official mission name                                                |
-| `program_type`           | String  | Mission program type (e.g. Robotic, Human Spaceflight, Satellite)    |
-| `mission_category`       | String  | High-level mission category (e.g. Moon, Mars, Earth Orbit)           |
-| `sub_category`           | String  | Specific mission type (e.g. Orbiter, Lander, Rover, CubeSat)         |
-| `destination`            | String  | Target destination or operational region                             |
-| `status`                 | String  | Mission status (Success, Failed, Partial Success, Ongoing, Upcoming) |
-| `mission_phase`          | String  | Temporal classification (Past, Ongoing, Future)                      |
-| `crew_type`              | String  | Crewed or Uncrewed mission                                           |
-| `data_returned`          | String  | Indicates whether scientific or operational data was returned        |
-| `failure_reason`         | String  | Failure description for unsuccessful missions                        |
-| `cost_usd_billion`       | Float   | Mission cost in billions of USD                                      |
-| `duration_days`          | Float   | Mission duration in days                                             |
-| `agency_name`            | String  | Responsible space agency or organization                             |
-| `country_region`         | String  | Country or region associated with the mission                        |
-| `agency_type`            | String  | Agency classification (Government or Private)                        |
-| `launch_vehicle`         | String  | Launch vehicle used for the mission                                  |
-| `launch_site`            | String  | Launch facility or spaceport                                         |
-| `launch_date`            | Date    | Mission launch date                                                  |
-| `launch_year`            | Integer | Launch year extracted from launch date                               |
-| `launch_decade`          | String  | Launch decade (e.g. 1960s, 2000s, 2020s)                             |
-| `end_date`               | Date    | Mission end date (NULL for ongoing or future missions)               |
-| `end_year`               | Integer | End year extracted from end date                                     |
-| `end_decade`             | String  | End decade (e.g. 1970s, 2010s)                                       |
-| `objective`              | String  | Primary mission objective                                            |
-| `key_achievement`        | String  | Major accomplishment or milestone achieved                           |
-| `mission_outcome_detail` | String  | Detailed description of mission outcome                              |
-| `reference_url`          | String  | Source URL used for verification                                     |
+| Column | Type | Description |
+|---|---|---|
+| `mission_id` | String | Unique mission identifier |
+| `mission_name` | String | Official mission name |
+| `program_type` | String | Mission program type (Robotic, Human Spaceflight, Satellite) |
+| `mission_category` | String | High-level category (Moon, Mars, Earth Orbit, etc.) |
+| `sub_category` | String | Specific mission type (Orbiter, Lander, Rover, CubeSat) |
+| `destination` | String | Target destination or operational region |
+| `status` | String | Mission status (Success, Failed, Partial Success, Ongoing, Upcoming) |
+| `mission_phase` | String | Temporal classification (Past, Ongoing, Future) |
+| `crew_type` | String | Crewed or Uncrewed |
+| `data_returned` | String | Whether scientific or operational data was returned |
+| `failure_reason` | String | Failure description for unsuccessful missions |
+| `cost_usd_billion` | Float | Mission cost in billions of USD |
+| `duration_days` | Float | Mission duration in days |
+| `agency_name` | String | Responsible space agency |
+| `country_region` | String | Country or region associated with the mission |
+| `agency_type` | String | Government or Private |
+| `launch_vehicle` | String | Launch vehicle used |
+| `launch_site` | String | Launch facility or spaceport |
+| `launch_date` | Date | Mission launch date |
+| `launch_year` | Integer | Year extracted from launch date |
+| `launch_decade` | String | Launch decade (e.g. 1960s, 2000s) |
+| `end_date` | Date | Mission end date (NULL for ongoing/future missions) |
+| `end_year` | Integer | Year extracted from end date |
+| `end_decade` | String | End decade |
+| `objective` | String | Primary mission objective |
+| `key_achievement` | String | Major accomplishment or milestone |
+| `mission_outcome_detail` | String | Detailed outcome description |
+| `reference_url` | String | Source URL used for verification |
 
 ---
 
 ## 🧱 Project Architecture
 
-This project was designed as a complete analytical pipeline rather than a standalone notebook workflow.
+This project is built as a real analytics pipeline rather than a single notebook: raw data is cleaned and validated in Python, transformed into a star-schema structure, loaded into PostgreSQL, and queried directly from the warehouse for every downstream notebook.
 
-The dataset is first cleaned and validated in Python, transformed into an analytical star-schema structure, and then loaded into PostgreSQL using a custom ETL pipeline.
+The pipeline separates concerns deliberately:
 
-The project separates:
-
-* Raw data ingestion
-* Data cleaning and validation
-* Schema transformation
-* Database loading
-* Analytical querying
-
----
+- Raw data ingestion
+- Data cleaning and validation
+- Schema transformation
+- Database loading
+- Analytical querying (every notebook reads from PostgreSQL, not the raw CSV)
 
 ### 📁 Repository Structure
 
@@ -85,14 +84,9 @@ space_mission_analysis/
 │       └── space_missions.csv
 │
 ├── notebooks/
-│   ├── 01_data_cleaning.ipynb
+│   ├── 01_data_quality_audit.ipynb
 │   ├── 02_eda.ipynb
-│   ├── 03_historical_analysis.ipynb
-│   ├── 04_failure_analysis.ipynb
-│   ├── 05_clustering.ipynb
-│   ├── 06_classification.ipynb
-│   ├── 07_time_series.ipynb
-│   └── 08_anomaly_detection.ipynb
+│   └── 03_historical_analysis.ipynb
 │
 ├── src/
 │   ├── config.py
@@ -110,62 +104,72 @@ space_mission_analysis/
 
 ## 🗄️ Database Design
 
-The raw dataset was transformed into a **star schema PostgreSQL warehouse** optimized for analytical queries and BI integration.
-
-### Schema Diagram
+The dataset is transformed into a **star schema PostgreSQL warehouse**, designed for analytical queries and direct Power BI integration.
 
 ```
                     ┌─────────────────┐
-                    │   dim_date      │
+                    │    dim_date     │
                     └────────┬────────┘
                              │
 ┌────────────────┐   ┌───────┴──────────┐   ┌─────────────────┐
-│  dim_agency    │   │  fact_missions   │   │  dim_launch     │
+│  dim_agency    │───│  fact_missions   │───│  dim_launch     │
 └────────────────┘   └───────┬──────────┘   └─────────────────┘
                              │
-                     ┌───────┴──────────┐
+                     ┌───────┴───────────┐
                      │ dim_mission_meta  │
                      └───────────────────┘
 ```
 
 ### Tables Overview
 
-| Table              | Rows (approx.) | Purpose                 |
-| ------------------ | -------------- | ----------------------- |
-| `fact_missions`    | ~4,630         | Core mission facts      |
-| `dim_date`         | ~7,648         | Calendar dimension      |
-| `dim_agency`       | ~11            | Agency information      |
-| `dim_launch`       | ~121           | Launch vehicles & sites |
-| `dim_mission_meta` | ~4,630         | Mission descriptions    |
+| Table | Rows (approx.) | Purpose |
+|---|---|---|
+| `fact_missions` | ~4,630 | Core mission facts |
+| `dim_date` | ~7,648 | Calendar dimension |
+| `dim_agency` | ~11 | Agency information |
+| `dim_launch` | ~121 | Launch vehicles & sites |
+| `dim_mission_meta` | ~4,630 | Mission descriptions |
+| `bridge_crew` | varies | Crew member bridge table |
+| `bridge_partners` | varies | Partner agency bridge table |
 
 ---
 
 ## ⚙️ ETL Pipeline (`etl_load.py`)
 
-### Pipeline Steps
-
 1. Load raw CSV
-2. Clean & standardise data
-3. Parse duration fields into numeric days
-4. Validate data integrity rules
-5. Build dimension tables
-6. Build fact table
-7. Create analytical views
-8. Load into PostgreSQL
+2. Clean & standardise columns
+3. Parse duration text into numeric days (`duration_days`)
+4. Validate data integrity rules (e.g. launch date vs. agency founding year)
+5. Build dimension tables (`dim_date`, `dim_agency`, `dim_launch`, `dim_mission_meta`)
+6. Build fact table (`fact_missions`)
+7. Build bridge tables (`bridge_crew`, `bridge_partners`)
+8. Load all tables into PostgreSQL with FK-safe ordering and indexing
 
 ---
 
 ## 🧹 Key Data Cleaning Decisions
 
-| Issue                                    | Action                             |
-| ---------------------------------------- | ---------------------------------- |
-| Sentinel strings (`n/a`, `none`, etc.)   | Converted to NULL                  |
-| Duration text values                     | Parsed into `duration_days`        |
-| Cost in millions                         | Converted to billions              |
-| Invalid dates (`end_date < launch_date`) | Removed (164 records)              |
-| Structural nulls                         | Preserved intentionally            |
-| Duplicate missions                       | Retained (valid distinct missions) |
-| Agency founding violations               | Removed during validation          |
+| Issue | Action |
+|---|---|
+| Sentinel strings (`n/a`, `none`, etc.) | Converted to NULL |
+| Duration text values (e.g. "3.9 years") | Parsed into `duration_days` |
+| Cost in millions | Converted to billions |
+| Launch date before agency founding year | Removed during validation |
+| Date parsing mismatch (DD/MM/YYYY) | Fixed with `dayfirst=True`, resolved ~3,000 null dates |
+| Structural nulls (e.g. no end date for ongoing missions) | Preserved intentionally |
+| Duplicate missions | Retained as valid distinct entries |
+
+---
+
+## 📓 Notebooks
+
+| Notebook | What it covers |
+|---|---|
+| `01_data_quality_audit.ipynb` | Post-ETL data quality checks — completeness, consistency, referential integrity against the PostgreSQL warehouse |
+| `02_eda.ipynb` | Full exploratory analysis with statistical testing — Chi-square independence tests, Welch's t-tests for unequal variances, Pearson correlation |
+| `03_historical_analysis.ipynb` | Era-based historical analysis: annotated timeline, 5-year rolling success rates, government vs. private sector shift, agency dominance heatmap by era, cost trends over time, mission category shifts by decade |
+
+Every notebook queries the PostgreSQL warehouse directly via `src/db.py` (`load_missions_full()`), not the raw CSV — this keeps analysis consistent with the cleaned, validated data model.
 
 ---
 
@@ -179,10 +183,7 @@ psycopg2-binary
 python-dotenv
 matplotlib
 seaborn
-scikit-learn
-xgboost
-shap
-prophet
+scipy
 jupyter
 ```
 
@@ -204,31 +205,26 @@ cd space-mission-analysis
 python -m venv venv
 ```
 
-**Activate environment:**
+**Activate environment**
 
 Windows:
-
 ```bash
 venv\Scripts\activate
 ```
 
 Mac/Linux:
-
 ```bash
 source venv/bin/activate
 ```
 
 Install dependencies:
-
 ```bash
 pip install -r requirements.txt
 ```
 
----
-
 ### 2. Configure database
 
-Create `.env` file:
+Create a `.env` file:
 
 ```
 DB_HOST=localhost
@@ -238,23 +234,17 @@ DB_USER=your_user
 DB_PASSWORD=your_password
 ```
 
----
-
 ### 3. Create schema
 
 ```bash
 psql -U your_user -d space_missions -f schema.sql
 ```
 
----
-
 ### 4. Run ETL pipeline
 
 ```bash
 python -m etl_load
 ```
-
----
 
 ### 5. Open notebooks
 
@@ -266,30 +256,29 @@ jupyter notebook notebooks/
 
 ## 📊 Tech Stack
 
-| Layer           | Technology                           |
-| --------------- | ------------------------------------ |
-| Data Storage    | PostgreSQL                           |
-| ETL & Analysis  | Python, pandas, SQLAlchemy           |
-| ML              | scikit-learn, XGBoost, SHAP, Prophet |
-| Visualization   | matplotlib, seaborn                  |
-| BI              | Power BI                             |
-| Version Control | Git & GitHub                         |
+| Layer | Technology |
+|---|---|
+| Data Storage | PostgreSQL |
+| ETL & Analysis | Python, pandas, SQLAlchemy |
+| Statistical Testing | scipy.stats |
+| Visualization | matplotlib, seaborn |
+| BI Reporting | Power BI |
+| Version Control | Git & GitHub |
 
 ---
 
 ## 📁 Key Files
 
-| File                     | Purpose                    |
-| ------------------------ | -------------------------- |
-| `schema.sql`             | Database schema + views    |
-| `etl_load.py`            | ETL pipeline               |
-| `src/db.py`              | DB utilities               |
-| `src/logger.py`          | Logging system             |
-| `src/config.py`          | Configuration              |
-| `01_data_cleaning.ipynb` | Data quality documentation |
+| File | Purpose |
+|---|---|
+| `schema.sql` | Database schema + views |
+| `etl_load.py` | ETL pipeline |
+| `src/db.py` | Database connection and query utilities |
+| `src/logger.py` | Centralised logging system |
+| `src/config.py` | Configuration and path management |
 
 ---
 
 ## 👤 Author
 
-Project by Ahmed Mohi  — Data Analytics Portfolio Project
+Project by Ahmed Mohi — Data Analytics Portfolio Project

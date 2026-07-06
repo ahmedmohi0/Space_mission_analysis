@@ -50,7 +50,7 @@ CREATE TABLE fact_missions (
     launch_date_id      INT             REFERENCES dim_date(date_id),
     end_date_id         INT             REFERENCES dim_date(date_id),   -- NULL if ongoing/future
 
-    -- Categoricals (kept in fact for direct Power BI slicing)
+    -- Categoricals 
     program_type        VARCHAR(100),   -- Robotic, Human Spaceflight, Satellite…
     mission_category    VARCHAR(100),   -- Moon, Mars, Earth Orbit…
     sub_category        VARCHAR(100),   -- Orbiter, Lander, Rover, CubeSat…
@@ -63,7 +63,7 @@ CREATE TABLE fact_missions (
     -- Failure detail (NULL for non-failed missions)
     failure_reason      TEXT,
 
-    -- Measures
+    
     cost_usd_billion    DECIMAL(12, 2), -- NULL if unknown
     duration_days       DECIMAL(10, 2)  -- Parsed from Duration string by Python; NULL if ongoing
 );
@@ -113,7 +113,9 @@ SELECT
     sum(CASE WHEN f.status = 'Upcoming'        THEN 1 ELSE 0 END) AS upcoming_missions,
     sum(CASE WHEN f.crew_type = 'Crewed'        THEN 1 ELSE 0 END) AS crewed_missions,
     ROUND(
-        100.0 * SUM(CASE WHEN f.status = 'Success' THEN 1 ELSE 0 END)
+        100.0 * SUM(CASE WHEN f.status = 'Success' THEN 1 ELSE 0 END) filter(
+            WHERE mission_phase = 'Past'
+        )
         / NULLIF(COUNT(f.mission_id), 0), 2
     )                                                            AS success_rate_pct,
     ROUND(AVG(f.cost_usd_billion), 2)                           AS avg_cost_usd_billion,
@@ -146,10 +148,62 @@ SELECT
     f.mission_category,
     COUNT(f.mission_id)                                          AS total_missions,
     ROUND(
-        100.0 * SUM(CASE WHEN f.status = 'Success' THEN 1 ELSE 0 END)
+        100.0 * SUM(CASE WHEN f.status = 'Success' THEN 1 ELSE 0 END) filter(
+            WHERE mission_phase = 'Past'
+        )
         / NULLIF(COUNT(f.mission_id), 0), 2
     )                                                            AS success_rate_pct,
     ROUND(AVG(f.cost_usd_billion), 2)                           AS avg_cost_usd_billion
 FROM fact_missions f
 GROUP BY f.destination, f.mission_category
 ORDER BY total_missions DESC;
+
+
+
+CREATE OR REPLACE VIEW vw_dashboard_facts as
+SELECT
+    f.mission_id,
+    a.agency_name,
+    a.country_region,
+    a.agency_type,
+    d.full_date,
+    d.year,
+    d.quarter,
+    d.month,
+    d.decade,
+    l.launch_site,
+    l.launch_vehicle,
+    f.destination,
+    f.mission_category,
+    f.sub_category,
+    f.program_type,
+    f.status,
+    f.mission_phase,
+    f.crew_type,
+    f.failure_reason,
+    f.cost_usd_billion,
+    f.duration_days,
+    m.objective,
+    m.key_achievement,
+    CASE
+        WHEN d.year < 1957 THEN 'Pre-Space Age'
+        WHEN d.year <= 1969 THEN 'Space Race'
+        WHEN d.year <= 1991 THEN 'Cold War'
+        WHEN d.year <= 2003 THEN 'Post-Cold War'
+        WHEN d.year <= 2015 THEN 'Commercial Dawn'
+        ELSE 'New Space Era'
+    END AS era,
+
+CASE
+    WHEN d.year < 1957 THEN 0
+    WHEN d.year <= 1969 THEN 1
+    WHEN d.year <= 1991 THEN 2
+    WHEN d.year <= 2003 THEN 3
+    WHEN d.year <= 2015 THEN 4
+    ELSE 5
+END AS era_order
+FROM fact_missions f
+JOIN dim_agency a ON f.agency_id = a.agency_id
+JOIN dim_date d ON f.launch_date_id = d.date_id
+JOIN dim_launch l ON f.launch_id = l.launch_id
+join dim_mission_meta m on f.mission_id = m.mission_id;
