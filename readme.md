@@ -1,8 +1,40 @@
-# 🚀 Space Missions Analytics Pipeline (1957–2022)
+# 🚀 Space Missions Analytics Pipeline (1957–2035)
 
-An end-to-end data analytics project covering 65 years of space exploration history — from raw data ingestion and cleaning, through a PostgreSQL star-schema warehouse, to statistical analysis and a Power BI report.
+<p align="center">
+  <img src="images/Page1.png" alt="Executive Overview Power BI Dashboard" width="780"/>
+</p>
 
-I built this to answer a real question, not just to showcase tools: **has spaceflight actually gotten more reliable and more commercial over time, or does it just look that way?** Every notebook exists to test a specific claim against the historical record — using Chi-square tests, Welch's t-tests, and rolling trend analysis rather than eyeballing charts. The pipeline itself reflects how I'd want to work on a real team: a validated PostgreSQL warehouse sits behind every notebook, so the analysis is reproducible and the data quality is checked before a single chart gets made.
+<p align="center">
+<b>End-to-End Data Analytics Pipeline</b><br>
+Python • PostgreSQL • Statistical Analysis • Power BI
+</p>
+
+<p align="center">
+
+![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue?logo=postgresql)
+![Power BI](https://img.shields.io/badge/Power%20BI-Dashboard-F2C811?logo=powerbi)
+![Status](https://img.shields.io/badge/Status-Complete-success)
+
+</p>
+
+An end-to-end analytics pipeline exploring nearly seven decades of space exploration, from raw mission records to an interactive Power BI dashboard.
+
+The project investigates how mission reliability, commercial participation, and exploration priorities have evolved over time. Rather than relying solely on descriptive charts, the analysis combines a PostgreSQL data warehouse with statistical hypothesis testing and historical trend analysis to distinguish genuine patterns from visual impressions.
+
+The pipeline mirrors a production-style analytics workflow: raw data is validated before loading, transformed into a PostgreSQL star schema, and queried consistently across Python notebooks and Power BI.
+
+---
+
+## 📌 Business Questions
+
+This project aims to answer questions such as:
+
+- Has mission reliability improved over the history of space exploration?
+- Which agencies and countries have historically achieved the highest mission success?
+- How has commercial spaceflight changed the global launch landscape?
+- Which mission categories are the most technically challenging?
+- Which operational and historical factors are most strongly associated with mission success?
 
 ---
 
@@ -14,7 +46,42 @@ I built this to answer a real question, not just to showcase tools: **has spacef
 | Data Quality Audit | ✅ Complete |
 | Exploratory Data Analysis | ✅ Complete |
 | Historical / Era Analysis | ✅ Complete |
-| Power BI Report | 🔄 In Progress |
+| Power BI Dashboard | ✅ Complete |
+
+---
+
+# 📊 Dashboard Preview
+
+
+## Executive Overview
+
+![Executive Overview](images/Page1.png)
+
+---
+
+## Mission Portfolio
+
+![Mission Portfolio](images/Page2.png)
+
+---
+
+## Mission Reliability
+
+![Mission Reliability](images/Page3.png)
+
+
+
+
+---
+
+
+## 🔍 Key Findings
+
+- Historical mission reliability has steadily improved from the Space Race to the New Space Era.
+- NASA combines the largest mission portfolio with one of the strongest historical success rates.
+- Mission category has a greater influence on historical success than agency type alone.
+- Commercial launch activity has increased substantially since the early 2000s.
+- Statistical testing confirms that mission outcome is significantly associated with both country and mission category.
 
 ---
 
@@ -23,7 +90,7 @@ I built this to answer a real question, not just to showcase tools: **has spacef
 | Property | Detail |
 |---|---|
 | Source | [Kaggle](https://www.kaggle.com/datasets/maulikgajera/global-space-missions-dataset-19502025) |
-| Coverage | 1957–2035 |
+| Coverage | 1958–2035 |
 | Rows | ~7000 missions after cleaning and validation |
 | Columns | 26 |
 
@@ -74,34 +141,68 @@ The pipeline separates concerns deliberately:
 - Database loading
 - Analytical querying (every notebook reads from PostgreSQL, not the raw CSV)
 
-### 📁 Repository Structure
+## 📁 Repository Structure
 
 ```text
 space_mission_analysis/
 │
+├── dashboard/
+│   └── space_missions.pbix
+│
 ├── data/
 │   └── raw/
 │       └── space_missions.csv
+│
+├── images/
+│   ├── Page1.png
+│   ├── Page2.png
+│   └── Page3.png
+│
+├── logs/
+        └──.gitkeep
 │
 ├── notebooks/
 │   ├── 01_data_quality_audit.ipynb
 │   ├── 02_eda.ipynb
 │   └── 03_historical_analysis.ipynb
 │
+├── sql/
+│   └── schema.sql
+│
 ├── src/
 │   ├── config.py
 │   ├── db.py
+│   ├── etl_load.py
 │   └── logger.py
 │
-├── etl_load.py
-├── schema.sql
 ├── requirements.txt
-├── .env
+├── .gitignore
+├── .env.example
 └── README.md
-```
 
 ---
 
+## 🏗️ Pipeline Overview
+
+
+                 Raw CSV Dataset
+                        │
+                        ▼
+          Data Cleaning & Validation
+                 (Python / pandas)
+                        │
+                        ▼
+            PostgreSQL Star Schema
+                        │
+          ┌─────────────┴─────────────┐
+          ▼                           ▼
+ EDA and statistical Analysis            Power BI Dashboard
+ (Jupyter Notebooks)           (Interactive Report)
+
+
+Every notebook and dashboard queries the PostgreSQL warehouse rather than the raw dataset, ensuring that all analysis is performed on the same validated source of truth.
+
+---
 ## 🗄️ Database Design
 
 The dataset is transformed into a **star schema PostgreSQL warehouse**, designed for analytical queries and direct Power BI integration.
@@ -165,11 +266,58 @@ The dataset is transformed into a **star schema PostgreSQL warehouse**, designed
 
 | Notebook | What it covers |
 |---|---|
-| `01_data_quality_audit.ipynb` | Post-ETL data quality checks — completeness, consistency, referential integrity against the PostgreSQL warehouse |
-| `02_eda.ipynb` | Full exploratory analysis with statistical testing — Chi-square independence tests, Welch's t-tests for unequal variances, Pearson correlation |
-| `03_historical_analysis.ipynb` | Era-based historical analysis: annotated timeline, 5-year rolling success rates, government vs. private sector shift, agency dominance heatmap by era, cost trends over time, mission category shifts by decade |
+| `01_Data Quality Audit.ipynb` | Post-ETL data quality checks — completeness, consistency, referential integrity against the PostgreSQL warehouse |
+| `02_Exploratory Data Analysis.ipynb` | Full exploratory analysis with statistical testing — Chi-square independence tests, Welch's t-tests for unequal variances, Pearson correlation |
+| `03_Historical_Analysis.ipynb` | Era-based historical analysis: annotated timeline, 5-year rolling success rates, government vs. private sector shift, agency dominance heatmap by era, cost trends over time, mission category shifts by decade |
 
 Every notebook queries the PostgreSQL warehouse directly via `src/db.py` (`load_missions_full()`), not the raw CSV — this keeps analysis consistent with the cleaned, validated data model.
+
+---
+
+## 📈 Statistical Methods
+
+The analysis combines exploratory techniques with formal statistical testing.
+
+| Method | Purpose |
+|---|---|
+| Chi-square Test of Independence | Test associations between categorical variables (e.g. country vs. mission outcome) |
+| Welch's t-test | Compare means between groups with unequal variances |
+| Pearson Correlation | Measure linear relationships between continuous variables |
+| Rolling Averages | Identify long-term historical trends while reducing yearly volatility |
+| Descriptive Statistics | Summarize mission costs, durations, and operational characteristics |
+
+---
+
+## 📈 Power BI Dashboard
+
+The interactive report is available at:
+
+```text
+dashboard/space_missions.pbix
+```
+
+The report connects directly to analytical SQL views built on the PostgreSQL warehouse rather than exported CSV files.
+
+### Features
+
+- Executive KPI dashboard
+- Interactive bookmarks
+- Historical timeline annotations
+- Conditional formatting
+- Cross-filtering between visuals
+- Multi-page analytical report
+
+---
+## 📖 Dashboard Walkthrough
+
+### Executive Overview
+Provides a high-level summary of historical space exploration through KPIs, launch trends, and major milestones.
+
+### Mission Portfolio
+Explores destinations, launch vehicles, mission categories, and cost distribution with interactive filtering by historical era.
+
+### Mission Reliability
+Focuses on mission outcomes, failure causes, and the long-term evolution of mission success across the history of space exploration.
 
 ---
 
@@ -200,8 +348,8 @@ pip install -r requirements.txt
 ### 1. Setup environment
 
 ```bash
-git clone https://github.com/your-username/space-mission-analysis.git
-cd space-mission-analysis
+git clone https://github.com/ahmedmohi0/space_mission_analysis.git
+cd space_mission_analysis
 python -m venv venv
 ```
 
@@ -224,7 +372,7 @@ pip install -r requirements.txt
 
 ### 2. Configure database
 
-Create a `.env` file:
+Copy `.env.example` to `.env` and update the values.:
 
 ```
 DB_HOST=localhost
@@ -237,13 +385,13 @@ DB_PASSWORD=your_password
 ### 3. Create schema
 
 ```bash
-psql -U your_user -d space_missions -f schema.sql
+psql -U your_user -d space_missions -f sql/schema.sql
 ```
 
 ### 4. Run ETL pipeline
 
 ```bash
-python -m etl_load
+python src/etl_load.py
 ```
 
 ### 5. Open notebooks
@@ -269,16 +417,20 @@ jupyter notebook notebooks/
 
 ## 📁 Key Files
 
-| File | Purpose |
-|---|---|
-| `schema.sql` | Database schema + views |
-| `etl_load.py` | ETL pipeline |
-| `src/db.py` | Database connection and query utilities |
-| `src/logger.py` | Centralised logging system |
-| `src/config.py` | Configuration and path management |
+| File                            | Purpose                        |
+| ------------------------------- | ------------------------------ |
+| `sql/schema.sql`                | Database schema and SQL views  |
+| `src/etl_load.py`               | ETL pipeline                   |
+| `src/db.py`                     | Database utilities             |
+| `src/logger.py`                 | Logging                        |
+| `src/config.py`                 | Configuration                  |
+| `dashboard/space_missions.pbix` | Interactive Power BI dashboard |
 
 ---
-
 ## 👤 Author
 
-Project by Ahmed Mohi — Data Analytics Portfolio Project
+**Ahmed Mohi Eldin Aly**
+
+Data Analytics | Python | SQL | PostgreSQL | Power BI | Statistics
+
+This project was developed as part of my data analytics portfolio to demonstrate end-to-end analytical workflows, statistical reasoning, data warehousing, and interactive dashboard development.
