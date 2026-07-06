@@ -179,11 +179,11 @@ space_mission_analysis/
 ├── .gitignore
 ├── .env.example
 └── README.md
-
+```
 ---
 
 ## 🏗️ Pipeline Overview
-
+```text
 
                  Raw CSV Dataset
                         │
@@ -198,7 +198,7 @@ space_mission_analysis/
           ▼                           ▼
  EDA and statistical Analysis            Power BI Dashboard
  (Jupyter Notebooks)           (Interactive Report)
-
+```
 
 Every notebook and dashboard queries the PostgreSQL warehouse rather than the raw dataset, ensuring that all analysis is performed on the same validated source of truth.
 
@@ -207,7 +207,7 @@ Every notebook and dashboard queries the PostgreSQL warehouse rather than the ra
 
 The dataset is transformed into a **star schema PostgreSQL warehouse**, designed for analytical queries and direct Power BI integration.
 
-```
+```text
                     ┌─────────────────┐
                     │    dim_date     │
                     └────────┬────────┘
