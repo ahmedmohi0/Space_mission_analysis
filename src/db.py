@@ -5,7 +5,6 @@ import pandas as pd
 from sqlalchemy import URL, create_engine, text
 from dotenv import load_dotenv
 from src.logger import get_logger
-from sqlalchemy.engine import url 
 load_dotenv()
 #module level logger
 log = get_logger(__name__)
@@ -81,7 +80,7 @@ def query(sql: str, params: dict = None) -> pd.DataFrame:
         log.error(f"Query failed: {e}")
         raise
 
-#This function simply reads an entire table into the dataframe using pandas read_sql the point of it is just to have a quick way to load a whole table without writing SQL, but it should be used sparingly for large tables to avoid memory issues.
+
 
 def query_table(table_name: str) -> pd.DataFrame:
     
